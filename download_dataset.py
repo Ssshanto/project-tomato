@@ -5,16 +5,19 @@ import shutil
 import zipfile
 import requests
 import tqdm
+import gdown
 from clint.textui import progress
 import pandas as pd
 
 
-def downloadFile(datasetUrl, fileName, chunksize=4096):
+def downloadFile(id, fileName, chunksize=4096):
     """
     This function downloads a file from the given url and saves it in the given filename
     """
     try:
-        response = requests.get(datasetUrl, stream=True)
+        URL = "https://docs.google.com/uc?export=download"
+        session = requests.Session()
+        response = session.get(URL, params = { 'id' : id }, stream = True)
         total_length = int(response.headers.get('content-length'))
         with open("PlantVillage-Tomato.zip", "wb") as f:
             for chunk in progress.bar(response.iter_content(chunk_size=chunksize),
@@ -24,7 +27,6 @@ def downloadFile(datasetUrl, fileName, chunksize=4096):
                     f.flush()
     except Exception as exp:
         print("Problem Downloading\nError Log:\n" + exp)
-
 
 def create_dataset(data_dir="PlantVillage-Tomato"):
     # Setting up the directories
@@ -210,11 +212,11 @@ def deleteUnwanteFiles():
 
 if __name__ == "__main__":
     # Downloading Files
-    datasetUrl = "https://data.mendeley.com/public-files/datasets/tywbtsjrjv/files/d5652a28-c1d8-4b76-97f3-72fb80f94efc/file_downloaded"
+    url = "https://drive.google.com/u/0/uc?id=1H5xjgXmAsfCTF2iF_FN4Ld-Qv2SDVCei&export=download&confirm=t"
     fileName = "PlantVillage-Tomato.zip"
     appDir = os.path.realpath(os.path.dirname(__file__))
+    gdown.download(url, fileName, quiet=False)
     fileName = os.path.join(appDir, fileName)
-    downloadFile(datasetUrl= datasetUrl, fileName=fileName)
 
     # Extracting Files
     extractZip(filename="PlantVillage-Tomato.zip")
