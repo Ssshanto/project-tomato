@@ -2,6 +2,10 @@ name: tomato
 channels:
   - defaults
 dependencies:
+  - python=3.8
+  - tensorflow-gpu=2.4.1
+  - pandas
+  - matplotlib
   - _libgcc_mutex=0.1=main
   - _openmp_mutex=5.1=1_gnu
   - _tflow_select=2.1.0=gpu
